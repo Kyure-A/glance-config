@@ -1,0 +1,89 @@
+pages:
+  - name: Home
+  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
+  # hide-desktop-navigation: true
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+            first-day-of-week: monday
+
+          - type: custom-api
+            title: Steam Specials
+            cache: 12h
+            url: https://store.steampowered.com/api/featuredcategories?cc=jp
+            template: |
+               <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
+               {{ range .JSON.Array "specials.items" }}
+               <li>
+                <a class="size-h4 color-highlight block text-truncate" href="https://store.steampowered.com/app/{{ .Int "id" }}/">{{ .String "name" }}</a>
+                <ul class="list-horizontal-text">
+                <li>{{ div (.Int "final_price" | toFloat) 100 | printf "$%.2f" }}</li>
+                 {{ $discount := .Int "discount_percent" }}
+                <li{{ if ge $discount 40 }} class="color-positive"{{ end }}>{{ $discount }}% off</li>
+               </ul>
+               </li>
+               {{ end }}
+               </ul>
+            
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - type: reddit
+                subreddit: emacs 
+                show-thumbnails: true
+              - type: reddit
+                subreddit: singularity
+                show-thumbnails: true
+
+          - type: videos
+            channels:
+              - UClSsb_e0HDQ-w7XuwNPgGqQ # 匿名ラジオ
+              - UCmvMZJir-rp8SLkU0IBrHQQ # rarapon
+              - UCu8Jtlcv4Q2P4VeGwwiPnTg # さいちょう
+              - UCVUOqvMUHCs-WK6aqe62eJw # さいちょう2nd
+              - UCTW2tw0Mhho72MojB1L48IQ # nobaman
+              - UCOx-oLP9tOhiYwSK_m-yVxA # omocoro
+              - UC5HCfSYmOueY7fmGS8uJwFw # ニュース! オモコロウォッチ
+              - UCamum646xhn0Fi0Np9p7DGw # 青海【おうみ】
+              - UCQHCHIoeu0FRJTJNMG2_Ezw # 藍月なくる
+              - UCD-miitqNY3nyukJ4Fnf4_A # 月ノ美兎
+              - UCP5S9GMXVDh4HVs413BlFqw # 恐山
+              - UCQHCHIoeu0FRJTJNMG2_Ezw # bakibaki
+              - UCFU_oYKmxNI_8mYNQMhmLvA # ハウスダスト
+              - UCkKBxpoZOyk4aoldgJ8P6OQ # nekojo08
+              - UCyYwABFicHdW9_rLMEnkCXA # kamamiku
+                
+      - size: small
+        widgets:
+          - type: weather
+            location: Osaka, Japan
+            units: metric # alternatively "imperial"
+            hour-format: 12h # alternatively "24h"
+            # Optionally hide the location from being displayed in the widget
+            # hide-location: true
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: BTC-USD
+                name: Bitcoin
+              - symbol: NVDA
+                name: NVIDIA
+              - symbol: AAPL
+                name: Apple
+              - symbol: MSFT
+                name: Microsoft
+
+          - type: releases
+            cache: 1d
+            # Without authentication the Github API allows for up to 60 requests per hour. You can create a
+            # read-only token from your Github account settings and use it here to increase the limit.
+            # token: ...
+            repositories:
+              - glanceapp/glance
+              - go-gitea/gitea
+              - immich-app/immich
+              - syncthing/syncthing
