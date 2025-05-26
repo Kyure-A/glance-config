@@ -9,23 +9,22 @@ pages:
             first-day-of-week: monday
 
           - type: custom-api
-            title: Steam Specials
-            cache: 12h
-            url: https://store.steampowered.com/api/featuredcategories?cc=jp
+            title: Steam giveaways
+            cache: 1h
+            url: https://www.gamerpower.com/api/giveaways
+            parameters:
+              platform: steam
+              type: game
             template: |
                <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
-               {{ range .JSON.Array "specials.items" }}
-               <li>
-                <a class="size-h4 color-highlight block text-truncate" href="https://store.steampowered.com/app/{{ .Int "id" }}/">{{ .String "name" }}</a>
-                <ul class="list-horizontal-text">
-                <li>{{ div (.Int "final_price" | toFloat) 100 | printf "$%.2f" }}</li>
-                 {{ $discount := .Int "discount_percent" }}
-                <li{{ if ge $discount 40 }} class="color-positive"{{ end }}>{{ $discount }}% off</li>
-               </ul>
-               </li>
+               {{ range .JSON.Array "" }}
+                 <li>
+                   <a class="color-highlight block list-horizontal-text" target="_blank" rel="noopener noreferrer" href={{ .String "open_giveaway_url" }}>{{ .String "title" }}</a>
+                   <p class="color-positive">{{ .String "worth" }} -> $0 </p>
+                 </li>
                {{ end }}
                </ul>
-            
+               
       - size: full
         widgets:
           - type: group
